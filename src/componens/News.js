@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import NewsItems from './NewsItems';
-// import Spinner from './Spinner.js'
 import Spinner from './Spinner'
 
 export class News extends Component {
@@ -17,7 +16,7 @@ export class News extends Component {
     };
 
     async componentDidMount() {
-        let url = `https://newsapi.org/v2/top-headlines?country=in&apiKey=1ce0d7f388d74ef6982b7514c929e54f&page=${this.state.page}&pageSize=${this.props.pageSize}`
+        let url = `https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}&apiKey=1ce0d7f388d74ef6982b7514c929e54f&page=${this.state.page}&pageSize=${this.props.pageSize}`
         this.setState({ loading: true })
         let data = await fetch(url);
         let parsedData = await data.json()
@@ -31,7 +30,7 @@ export class News extends Component {
     }
 
     prevBtn = async () => {
-        let url = `https://newsapi.org/v2/top-headlines?country=in&apiKey=1ce0d7f388d74ef6982b7514c929e54f&page=${this.state.page - 1}&pageSize=${this.props.pageSize}`
+        let url = `https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}&apiKey=1ce0d7f388d74ef6982b7514c929e54f&page=${this.state.page - 1}&pageSize=${this.props.pageSize}`
         this.setState({ loading: true })
         let data = await fetch(url);
         let parsedData = await data.json()
@@ -46,7 +45,7 @@ export class News extends Component {
 
     nextBtn = async () => {
         if (!(this.state.page + 1 > Math.ceil(this.state.totalResults / this.props.pageSize))) {
-            let url = `https://newsapi.org/v2/top-headlines?country=in&apiKey=1ce0d7f388d74ef6982b7514c929e54f&page=${this.state.page + 1}&pageSize=${this.props.pageSize}`
+            let url = `https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}&apiKey=1ce0d7f388d74ef6982b7514c929e54f&page=${this.state.page + 1}&pageSize=${this.props.pageSize}`
             this.setState({ loading: true })
             let data = await fetch(url);
             let parsedData = await data.json()
@@ -75,6 +74,9 @@ export class News extends Component {
                                     description={element.description}
                                     imageUrl={element.urlToImage}
                                     newsUrl={element.url}
+                                    author={element.author}
+                                    date={element.publishedAt}
+                                    source={element.source.name}
                                 />
                             </div>
                         })}
