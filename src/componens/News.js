@@ -15,7 +15,8 @@ export class News extends Component {
 
     };
 
-    async componentDidMount() {
+
+    newsHub = async () => {
         let url = `https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}&apiKey=1ce0d7f388d74ef6982b7514c929e54f&page=${this.state.page}&pageSize=${this.props.pageSize}`
         this.setState({ loading: true })
         let data = await fetch(url);
@@ -29,31 +30,27 @@ export class News extends Component {
         })
     }
 
+    async componentDidMount() {
+        this.newsHub();
+    }
+
     prevBtn = async () => {
-        let url = `https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}&apiKey=1ce0d7f388d74ef6982b7514c929e54f&page=${this.state.page - 1}&pageSize=${this.props.pageSize}`
-        this.setState({ loading: true })
-        let data = await fetch(url);
-        let parsedData = await data.json()
+        this.newsHub();
 
         this.setState({
             page: this.state.page - 1,
-            articles: parsedData.articles,
-            loading: false
         })
 
     }
 
     nextBtn = async () => {
         if (!(this.state.page + 1 > Math.ceil(this.state.totalResults / this.props.pageSize))) {
-            let url = `https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}&apiKey=1ce0d7f388d74ef6982b7514c929e54f&page=${this.state.page + 1}&pageSize=${this.props.pageSize}`
-            this.setState({ loading: true })
-            let data = await fetch(url);
-            let parsedData = await data.json()
+
+            this.newsHub();
 
             this.setState({
                 page: this.state.page + 1,
-                articles: parsedData.articles,
-                loading: false
+
             })
         }
     }
@@ -63,7 +60,7 @@ export class News extends Component {
             <div className='container-fluid mt-4'>
                 <div className="container my-4">
                     <h1 className='text-center mb-4'>Headlines -
-                        <span className="text-danger">Top</span> headlines
+                        Top <span className="text-danger"> {this.props.category}</span>  headlines
                     </h1>
                     {this.state.loading && <Spinner />}
                     <div className="row">
@@ -90,19 +87,7 @@ export class News extends Component {
                     <button className="btn-dark btn" disabled={this.state.page + 1 > Math.ceil(this.state.totalResults / this.props.pageSize)} onClick={this.nextBtn}>
                         Next
                     </button>
-                    {/* <nav aria-label="Page navigation example">
-                        <ul className="pagination justify-content-end">
-                            <li className={`page-item `} disabled={this.state.page > 1} onClick={this.prevBtn}>
-                                <span className="page-link user-select-none" disabled={this.state.page > 1} >Previous</span>
-                            </li>
-                            <li className="page-item"><a className="page-link" href="/">1</a></li>
-                            <li className="page-item"><a className="page-link" href="/">2</a></li>
-                            <li className="page-item"><a className="page-link" href="/">3</a></li>
-                            <li className={`page-item`} onClick={this.nextBtn}>
-                                <span className={`page-link user-select-none`}>Next</span>
-                            </li>
-                        </ul>
-                    </nav> */}
+
                 </div>
             </div>
         )
